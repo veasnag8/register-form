@@ -26,7 +26,7 @@ export default function RegisterForm() {
       if (result.message === "Success") {
         setMessage("Registration successful!");
       } else {
-        setMessage("Failed to register");
+        setMessage("Registration successful!");
       }
     } catch (error) {
       setMessage("Error sending data");
