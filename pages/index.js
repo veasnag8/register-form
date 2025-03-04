@@ -20,13 +20,13 @@ export default function RegisterForm() {
       const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData), // Sending the form data to the API
+        body: JSON.stringify(formData),
       });
       const result = await response.json();
       if (result.message === "Success") {
         setMessage("Registration successful!");
       } else {
-        setMessage("Failed to register");
+        setMessage("Registration failed.");
       }
     } catch (error) {
       setMessage("Error sending data");
@@ -42,7 +42,7 @@ export default function RegisterForm() {
             type="text"
             name="name"
             placeholder="Name"
-            className="input"
+            className="input-field"
             onChange={handleChange}
             value={formData.name}
           />
@@ -50,7 +50,7 @@ export default function RegisterForm() {
             type="email"
             name="email"
             placeholder="Email"
-            className="input"
+            className="input-field"
             onChange={handleChange}
             value={formData.email}
           />
@@ -58,19 +58,64 @@ export default function RegisterForm() {
             type="text"
             name="phone"
             placeholder="Phone"
-            className="input"
+            className="input-field"
             onChange={handleChange}
             value={formData.phone}
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 mt-4 rounded-lg"
+            className="submit-button"
           >
             Register
           </button>
         </form>
-        {message && <p className="mt-4 text-center">{message}</p>}
+        {message && <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>}
       </div>
+
+      <style jsx>{`
+        .input-field {
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+          border-color: #007bff; /* Blue color */
+          outline: none;
+        }
+
+        .submit-button {
+          width: 100%;
+          background-color: #007bff; /* Blue color */
+          color: white;
+          padding: 12px;
+          margin-top: 10px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+          background-color: #0056b3; /* Darker blue */
+        }
+
+        .message {
+          margin-top: 10px;
+          text-align: center;
+        }
+
+        .success {
+          color: green;
+        }
+
+        .error {
+          color: red;
+        }
+      `}</style>
     </div>
   );
 }
