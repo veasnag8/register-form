@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
   const [message, setMessage] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  // Check if the device has already registered
+  useEffect(() => {
+    if (localStorage.getItem("device_registered") === "true") {
+      setIsRegistered(true);
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -10,6 +18,10 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isRegistered) {
+      setMessage("You can only register once from this device.");
+      return;
+    }
     if (!formData.name || !formData.email || !formData.phone) {
       setMessage("Please fill in all fields");
       return;
@@ -25,8 +37,10 @@ export default function RegisterForm() {
       const result = await response.json();
       if (result.message === "Success") {
         setMessage("Registration successful!");
+        localStorage.setItem("device_registered", "true"); // Mark the device as registered
+        setIsRegistered(true);
       } else {
-        setMessage("Registration successful!");
+        setMessage("Registration failed. Try again.");
       }
     } catch (error) {
       setMessage("Error sending data");
@@ -36,40 +50,43 @@ export default function RegisterForm() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-4">Register</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            className="input-field"
-            onChange={handleChange}
-            value={formData.name}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="input-field"
-            onChange={handleChange}
-            value={formData.email}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            className="input-field"
-            onChange={handleChange}
-            value={formData.phone}
-          />
-          <button
-            type="submit"
-            className="submit-button"
-          >
-            Register
-          </button>
-        </form>
-        {message && <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>}
+        <h2 className="text-2xl font-bold mb-4">ចុះឈ្មោះ</h2>
+        {isRegistered ? (
+          <p>You have already registered from this device.</p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              className="input-field"
+              onChange={handleChange}
+              value={formData.name}
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="input-field"
+              onChange={handleChange}
+              value={formData.email}
+            />
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone"
+              className="input-field"
+              onChange={handleChange}
+              value={formData.phone}
+            />
+            <button type="submit" className="submit-button">
+              Register
+            </button>
+          </form>
+        )}
+        {message && (
+          <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>
+        )}
       </div>
 
       <style jsx>{`
@@ -83,13 +100,13 @@ export default function RegisterForm() {
         }
 
         .input-field:focus {
-          border-color: #007bff; /* Blue color */
+          border-color: #007bff;
           outline: none;
         }
 
         .submit-button {
           width: 100%;
-          background-color: #007bff; /* Blue color */
+          background-color: #007bff;
           color: white;
           padding: 12px;
           margin-top: 10px;
@@ -100,7 +117,7 @@ export default function RegisterForm() {
         }
 
         .submit-button:hover {
-          background-color: #0056b3; /* Darker blue */
+          background-color: #0056b3;
         }
 
         .message {
