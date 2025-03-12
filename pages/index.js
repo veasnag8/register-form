@@ -89,6 +89,7 @@ export default function RegisterForm() {
               Register
             </button>
           </form>
+          <a href="https://information-blush.vercel.app/">Done</a>
         )}
         {message && (
           <p className={`message ${message.includes("Error") ? "error" : "success"}`}>
