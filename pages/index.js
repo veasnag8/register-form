@@ -5,7 +5,6 @@ export default function RegisterForm() {
   const [message, setMessage] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
 
-  // Check if the device has already registered
   useEffect(() => {
     if (localStorage.getItem("device_registered") === "true") {
       setIsRegistered(true);
@@ -13,7 +12,12 @@ export default function RegisterForm() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const validateEmail = (email) => {
+    return /^[\w-.]+@[\w-]+\.[a-z]{2,}$/i.test(email);
   };
 
   const handleSubmit = async (e) => {
@@ -24,6 +28,10 @@ export default function RegisterForm() {
     }
     if (!formData.name || !formData.email || !formData.phone) {
       setMessage("Please fill in all fields");
+      return;
+    }
+    if (!validateEmail(formData.email)) {
+      setMessage("Invalid email format");
       return;
     }
     setMessage("Sending...");
@@ -37,10 +45,8 @@ export default function RegisterForm() {
       const result = await response.json();
       if (result.message === "Success") {
         setMessage("Registration successful!");
-        localStorage.setItem("device_registered", "true"); // Mark the device as registered
+        localStorage.setItem("device_registered", "true");
         setIsRegistered(true);
-
-        // Redirect after 2 seconds
         setTimeout(() => {
           window.location.href = "https://information-blush.vercel.app/";
         }, 2000);
@@ -59,7 +65,7 @@ export default function RegisterForm() {
         {isRegistered ? (
           <p className="text-green-600 font-bold">អ្នកបានចុះឈ្មោះរួចរាល់</p>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="off">
             <input
               type="text"
               name="name"
@@ -85,17 +91,13 @@ export default function RegisterForm() {
               value={formData.phone}
             />
 
-            <button type="submit" className="submit-button">
-              Register
-            </button>
+            <button type="submit" className="submit-button">Register</button>
           </form>
-          <a href="https://information-blush.vercel.app/">Done</a>
         )}
         {message && (
-          <p className={`message ${message.includes("Error") ? "error" : "success"}`}>
-            {message}
-          </p>
+          <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>
         )}
+        <a href="https://information-blush.vercel.app/" className="mt-4 block text-center text-blue-600 underline">Done</a>
       </div>
 
       <style jsx>{`
