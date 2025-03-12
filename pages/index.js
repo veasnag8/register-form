@@ -39,6 +39,11 @@ export default function RegisterForm() {
         setMessage("Registration successful!");
         localStorage.setItem("device_registered", "true"); // Mark the device as registered
         setIsRegistered(true);
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          window.location.href = "https://information-blush.vercel.app/";
+        }, 2000);
       } else {
         setMessage("Registration failed. Try again.");
       }
@@ -52,7 +57,7 @@ export default function RegisterForm() {
       <div className="bg-white p-6 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4">ចុះឈ្មោះ</h2>
         {isRegistered ? (
-          <p>You have already registered from this device.</p>
+          <p className="text-green-600 font-bold">អ្នកបានចុះឈ្មោះរួចរាល់</p>
         ) : (
           <form onSubmit={handleSubmit}>
             <input
@@ -79,14 +84,17 @@ export default function RegisterForm() {
               onChange={handleChange}
               value={formData.phone}
             />
-           <a href="https://information-blush.vercel.app/" className="submit-button">
-            Register
-          </a>
 
+            <button type="submit" className="submit-button">
+              Register
+            </button>
           </form>
+          <a href="https://information-blush.vercel.app/">Done</a>
         )}
         {message && (
-          <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>
+          <p className={`message ${message.includes("Error") ? "error" : "success"}`}>
+            {message}
+          </p>
         )}
       </div>
 
