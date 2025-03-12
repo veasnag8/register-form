@@ -97,7 +97,6 @@ export default function RegisterForm() {
         {message && (
           <p className={`message ${message.includes("Error") ? "error" : "success"}`}>{message}</p>
         )}
-        <a href="https://information-blush.vercel.app/" className="mt-4 block text-center text-blue-600 underline">Done</a>
       </div>
 
       <style jsx>{`
