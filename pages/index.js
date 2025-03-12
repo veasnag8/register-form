@@ -19,7 +19,7 @@ export default function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isRegistered) {
-      setMessage("You can only register once from this device.");
+      setMessage("អ្នកបានចុះឈ្មោះរួចរាល់");
       return;
     }
     if (!formData.name || !formData.email || !formData.phone) {
@@ -79,9 +79,10 @@ export default function RegisterForm() {
               onChange={handleChange}
               value={formData.phone}
             />
-            <button type="submit" className="submit-button">
-              Register
-            </button>
+           <a href="https://information-blush.vercel.app/" className="submit-button">
+            Register
+          </a>
+
           </form>
         )}
         {message && (
